@@ -1,2 +1,6 @@
 *.swp
 *.csv
+*.p
+*/__pycache__/
+*.pyc
+*.pyo
