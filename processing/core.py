@@ -34,7 +34,7 @@ def prep_train_mats(maxlen, train_data, val_data, test_data):
     all_qs = q1s + q2s + val_q1s + val_q2s + test_q1s + test_q2s
 
     words = set(word for q in all_qs for word in q)
-    words = dict(zip(words, range(len(words))))
+    words = dict(zip(words, range(1, len(words) + 1)))
 
     def qs_to_mat(qs):
         mat = np.zeros((len(qs), maxlen))
@@ -42,7 +42,7 @@ def prep_train_mats(maxlen, train_data, val_data, test_data):
             for j, word in enumerate(q):
                 if j >= maxlen:
                     break
-                mat[i, j] = words[word] + 1
+                mat[i, maxlen - len(q) + j] = words[word]
         return mat
 
     x1 = qs_to_mat(q1s)
@@ -65,7 +65,7 @@ def build_embeddings(words):
     n_missing = 0
     for word, i in words.items():
         if word in word2vec.vocab:
-            embeddings[i + 1] = word2vec.word_vec(word)
+            embeddings[i] = word2vec.word_vec(word)
         else:
             n_missing += 1
     print('Missing words: {:0.2f}%'.format(n_missing / n_tokens * 100))
