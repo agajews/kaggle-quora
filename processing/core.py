@@ -22,27 +22,27 @@ def load_test(fnm='data/test.p'):
 
 
 def prep_train_mats(maxlen, train_data, val_data, test_data):
-    q1s = [entry[2] for entry in train_data]
-    q2s = [entry[3] for entry in train_data]
+    q1s = [' '.join(entry[2]) for entry in train_data]
+    q2s = [' '.join(entry[3]) for entry in train_data]
     duplicates = [entry[4] for entry in train_data]
 
-    val_q1s = [entry[2] for entry in val_data]
-    val_q2s = [entry[3] for entry in val_data]
+    val_q1s = [' '.join(entry[2]) for entry in val_data]
+    val_q2s = [' '.join(entry[3]) for entry in val_data]
     val_duplicates = [entry[4] for entry in val_data]
 
-    test_q1s = [entry[1] for entry in test_data]
-    test_q2s = [entry[2] for entry in test_data]
+    test_q1s = [' '.join(entry[1]) for entry in test_data]
+    test_q2s = [' '.join(entry[2]) for entry in test_data]
 
     all_qs = q1s + q2s + val_q1s + val_q2s + test_q1s + test_q2s
 
     tokenizer = Tokenizer()
-    tokenizer.fit_on_texts(' '.join(all_qs))
+    tokenizer.fit_on_texts(all_qs)
 
-    sequences_1 = tokenizer.texts_to_sequences(' '.join(q1s))
-    sequences_2 = tokenizer.texts_to_sequences(' '.join(q2s))
+    sequences_1 = tokenizer.texts_to_sequences(q1s)
+    sequences_2 = tokenizer.texts_to_sequences(q2s)
 
-    val_sequences_1 = tokenizer.texts_to_sequences(' '.join(val_q1s))
-    val_sequences_2 = tokenizer.texts_to_sequences(' '.join(val_q2s))
+    val_sequences_1 = tokenizer.texts_to_sequences(val_q1s)
+    val_sequences_2 = tokenizer.texts_to_sequences(val_q2s)
 
     words = tokenizer.word_index
 
