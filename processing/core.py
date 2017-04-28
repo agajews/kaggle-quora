@@ -4,6 +4,8 @@ from time import clock
 
 import numpy as np
 from gensim.models import KeyedVectors
+from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
 
 
 def load_pickle(fnm):
@@ -33,22 +35,40 @@ def prep_train_mats(maxlen, train_data, val_data, test_data):
 
     all_qs = q1s + q2s + val_q1s + val_q2s + test_q1s + test_q2s
 
-    words = set(word for q in all_qs for word in q)
-    words = dict(zip(words, range(1, len(words) + 1)))
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(' '.join(all_qs))
 
-    def qs_to_mat(qs):
-        mat = np.zeros((len(qs), maxlen))
-        for i, q in enumerate(qs):
-            for j, word in enumerate(q):
-                if j >= maxlen:
-                    break
-                mat[i, maxlen - len(q) + j] = words[word]
-        return mat
+    sequences_1 = tokenizer.texts_to_sequences(' '.join(q1s))
+    sequences_2 = tokenizer.texts_to_sequences(' '.join(q2s))
 
-    x1 = qs_to_mat(q1s)
-    x2 = qs_to_mat(q2s)
-    val_x1 = qs_to_mat(val_q1s)
-    val_x2 = qs_to_mat(val_q2s)
+    val_sequences_1 = tokenizer.texts_to_sequences(' '.join(val_q1s))
+    val_sequences_2 = tokenizer.texts_to_sequences(' '.join(val_q2s))
+
+    words = tokenizer.word_index
+
+    # words = set(word for q in all_qs for word in q)
+    # words = dict(zip(words, range(1, len(words) + 1)))
+    #
+    # def qs_to_mat(qs):
+    #     mat = np.zeros((len(qs), maxlen))
+    #     for i, q in enumerate(qs):
+    #         q = q[:maxlen]
+    #         for j, word in enumerate(q):
+    #             if j >= maxlen:
+    #                 break
+    #             mat[i, maxlen - len(q) + j] = words[word]
+    #     return mat
+    #
+    # x1 = qs_to_mat(q1s)
+    # x2 = qs_to_mat(q2s)
+    # val_x1 = qs_to_mat(val_q1s)
+    # val_x2 = qs_to_mat(val_q2s)
+
+    x1 = pad_sequences(sequences_1, maxlen=maxlen)
+    x2 = pad_sequences(sequences_2, maxlen=maxlen)
+
+    val_x1 = pad_sequences(val_sequences_1, maxlen=maxlen)
+    val_x2 = pad_sequences(val_sequences_2, maxlen=maxlen)
 
     y = np.array(duplicates)
     val_y = np.array(val_duplicates)
@@ -76,12 +96,12 @@ def load_data(processors, augmentors, hyperparams,
               val_split=0.1, interval=1000):
     maxlen = hyperparams['maxlen']
 
-    train_data = load_train()
+    train_data = load_train()[:5000]
     train_data = [(qid1, qid2, q1.split(), q2.split(), duplicate)
                   for (qid1, qid2, q1, q2, duplicate) in train_data]
     print('{} training entries'.format(len(train_data)))
 
-    test_data = load_test()
+    test_data = load_test()[:5000]
     test_data = [(_id, q1.split(), q2.split()) for (_id, q1, q2) in test_data]
     print('{} testing entries'.format(len(test_data)))
 
