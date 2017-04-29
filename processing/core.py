@@ -159,6 +159,6 @@ def load_data(processors, augmentors, hyperparams, prestamp,
     embeddings = build_embeddings(words)
 
     with open(prestamp, 'wb') as f:
-        f.write(pickle.dump((x1, x2, y, val_x1, val_x2, val_y, embeddings)))
+        pickle.dump((x1, x2, y, val_x1, val_x2, val_y, embeddings), f)
 
     return x1, x2, y, val_x1, val_x2, val_y, embeddings
