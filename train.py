@@ -52,6 +52,8 @@ def train(model, model_hyperparams, processors, augmentors, global_hyperparams,
         [all_augmentors[a] for a in augmentors],
         global_hyperparams, prestamp, val_split)
 
+    print('Found {} tokens'.format(embeddings.shape[0]))
+
     print('Training model...')
     val_loss, misc_data = all_models[model].train(
         x1, x2, y, val_x1, val_x2,
@@ -111,4 +113,4 @@ if __name__ == '__main__':
         'replace_nums',
         'fancy_tokenize',
         'stem'
-    ], [], {'maxlen': 30})
+    ], ['transitivify'], {'maxlen': 30})
