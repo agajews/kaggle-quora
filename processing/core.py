@@ -2,6 +2,7 @@ import pickle
 from sys import stdout
 from time import clock
 
+import os.path
 import numpy as np
 from gensim.models import KeyedVectors
 from keras.preprocessing.sequence import pad_sequences
@@ -92,16 +93,20 @@ def build_embeddings(words):
     return embeddings
 
 
-def load_data(processors, augmentors, hyperparams,
+def load_data(processors, augmentors, hyperparams, prestamp,
               val_split=0.1, interval=1000):
     maxlen = hyperparams['maxlen']
 
-    train_data = load_train()
+    if os.path.exists(prestamp):
+        with open(prestamp, 'rb') as f:
+            return pickle.load(f.read())
+
+    train_data = load_train()[:5000]
     train_data = [(qid1, qid2, q1.split(), q2.split(), duplicate)
                   for (qid1, qid2, q1, q2, duplicate) in train_data]
     print('{} training entries'.format(len(train_data)))
 
-    test_data = load_test()
+    test_data = load_test()[:5000]
     test_data = [(_id, q1.split(), q2.split()) for (_id, q1, q2) in test_data]
     print('{} testing entries'.format(len(test_data)))
 
@@ -152,5 +157,8 @@ def load_data(processors, augmentors, hyperparams,
 
     print('Preparing word embeddings...')
     embeddings = build_embeddings(words)
+
+    with open(prestamp, 'wb') as f:
+        f.write(pickle.dump((x1, x2, y, val_x1, val_x2, val_y, embeddings)))
 
     return x1, x2, y, val_x1, val_x2, val_y, embeddings

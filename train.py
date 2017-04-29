@@ -41,11 +41,16 @@ def train(model, model_hyperparams, processors, augmentors, global_hyperparams,
     print('Global hyperparams:')
     pprint(global_hyperparams)
 
+    prestamp = 'procdata/{}_{}_{}.p'.format(
+        '-'.join(processors), '-'.join(augmentors),
+        '-'.join('{}={}'.format(k, v) for k, v in global_hyperparams.items()))
+    print(prestamp)
+
     print('Loading data...')
     x1, x2, y, val_x1, val_x2, val_y, embeddings = load_data(
         [all_processors[p] for p in processors],
         [all_augmentors[a] for a in augmentors],
-        global_hyperparams, val_split)
+        global_hyperparams, prestamp, val_split)
 
     print('Training model...')
     val_loss, misc_data = all_models[model].train(
@@ -106,4 +111,4 @@ if __name__ == '__main__':
         'replace_nums',
         'fancy_tokenize',
         'stem'
-    ], ['transitivify'], {'maxlen': 30})
+    ], [], {'maxlen': 30})
