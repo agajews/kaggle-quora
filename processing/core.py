@@ -101,12 +101,12 @@ def load_data(processors, augmentors, hyperparams, prestamp,
         with open(prestamp, 'rb') as f:
             return pickle.load(f)
 
-    train_data = load_train()[:5000]
+    train_data = load_train()
     train_data = [(qid1, qid2, q1.split(), q2.split(), duplicate)
                   for (qid1, qid2, q1, q2, duplicate) in train_data]
     print('{} training entries'.format(len(train_data)))
 
-    test_data = load_test()[:5000]
+    test_data = load_test()
     test_data = [(_id, q1.split(), q2.split()) for (_id, q1, q2) in test_data]
     print('{} testing entries'.format(len(test_data)))
 
