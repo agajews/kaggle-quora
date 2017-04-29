@@ -110,7 +110,7 @@ if __name__ == '__main__':
     }, [
         'lower',
         'strip_punct',
-        'replace_nums',
         'fancy_tokenize',
+        'replace_nums',
         'stem'
     ], ['transitivify'], {'maxlen': 30})

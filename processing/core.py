@@ -142,14 +142,14 @@ def load_data(processors, augmentors, hyperparams, prestamp,
         lambda q: (q[1], q[2]),
         lambda q, q1, q2: (q[0], q1, q2))
 
-    print('Augmenting training data...')
-    for augmentor in augmentors:
-        train_data = augmentor(train_data, **hyperparams)
-
     split = int(len(train_data) * val_split)
     data = train_data
     train_data = data[:-split]
     val_data = data[-split:]
+
+    print('Augmenting training data...')
+    for augmentor in augmentors:
+        train_data = augmentor(train_data, **hyperparams)
 
     print('Building training matrices...')
     x1, x2, y, val_x1, val_x2, val_y, words = prep_train_mats(

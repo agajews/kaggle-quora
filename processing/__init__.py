@@ -13,8 +13,8 @@ all_processors = {
 processor_order = [
     'lower',
     'strip_punct',
-    'replace_nums',
     'fancy_tokenize',
+    'replace_nums',
     'stem'
 ]
 
