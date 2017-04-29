@@ -99,7 +99,7 @@ def load_data(processors, augmentors, hyperparams, prestamp,
 
     if os.path.exists(prestamp):
         with open(prestamp, 'rb') as f:
-            return pickle.load(f.read())
+            return pickle.load(f)
 
     train_data = load_train()[:5000]
     train_data = [(qid1, qid2, q1.split(), q2.split(), duplicate)
