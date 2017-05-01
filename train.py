@@ -39,9 +39,12 @@ def train(model, model_hyperparams, global_hyperparams, fnm='results.json'):
     print('Found {} tokens'.format(embeddings.shape[0]))
 
     print('Training model...')
+    # val_loss, misc_data = all_models[model].train(
+    #     x1[:5000], x2[:5000], y[:5000], val_x1[:5000], val_x2[:5000],
+    #     val_y[:5000], embeddings, stamp, len(results), **model_hyperparams)
     val_loss, misc_data = all_models[model].train(
-        x1[:5000], x2[:5000], y[:5000], val_x1[:5000], val_x2[:5000],
-        val_y[:5000], embeddings, stamp, len(results), **model_hyperparams)
+        x1, x2, y, val_x1, val_x2,
+        val_y, embeddings, stamp, len(results), **model_hyperparams)
     print('Val loss: {}'.format(val_loss))
     results[stamp] = {
         'val_loss': val_loss,
