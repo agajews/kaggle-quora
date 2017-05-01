@@ -53,6 +53,9 @@ def load_clean(maxlen=30):
     train = load_train()[:5000]
     test = load_test()[:5000]
 
+    print('Found {} train questions'.format(len(train)))
+    print('Found {} test questions'.format(len(test)))
+
     train_clean = []
     for (qid1, qid2, q1, q2, duplicate) in train:
         q1 = process_question(q1)
