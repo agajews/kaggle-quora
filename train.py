@@ -15,7 +15,8 @@ global_hyperparam_opts = {
 }
 
 
-def train(model, model_hyperparams, global_hyperparams, fnm='results.json'):
+def train(model, model_hyperparams, global_hyperparams, augment_names,
+          fnm='results.json'):
     stamp = model + '_'
     stamp += ','.join('{}={}'.format(k, v)
                       for k, v in model_hyperparams.items()) + '_'
@@ -34,7 +35,7 @@ def train(model, model_hyperparams, global_hyperparams, fnm='results.json'):
 
     print('Loading data...')
     x1, x2, y, val_x1, val_x2, val_y, _, _, _, embeddings = load_clean(
-        global_hyperparams)
+        global_hyperparams, augment_names)
 
     print('Found {} tokens'.format(embeddings.shape[0]))
 
@@ -90,4 +91,5 @@ if __name__ == '__main__':
         'lstm_depth': 1,
         'lstm_size': 256,
         'rec_dropout_p': 0.3
-    }, {'maxlen': 30})
+    }, [
+    ], {'maxlen': 30})

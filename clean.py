@@ -4,6 +4,7 @@ from os import path
 
 import numpy as np
 
+from augment import augmentations
 from gensim.models import KeyedVectors
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
@@ -47,7 +48,7 @@ def load_embeddings(word_index):
     return embeddings
 
 
-def load_clean(hyperparams=None):
+def load_clean(hyperparams, augment_names):
     if path.exists('data/all_clean.p'):
         with open('data/all_clean.p', 'rb') as f:
             return pickle.load(f)
@@ -80,29 +81,51 @@ def load_clean(hyperparams=None):
     test_q2s = [q2 for (_, q1, q2) in test_clean]
     all_qs = q1s + q2s + test_q1s + test_q2s
 
+    qid1s = [qid1 for (qid1, qid2, _, _, _) in train_clean]
+    qid2s = [qid2 for (qid1, qid2, _, _, _) in train_clean]
+
+    y = [d for (_, _, q1, q2, d) in train_clean]
+
+    split = int(0.1 * len(train_clean))
+
+    val_q1s = q1s[-split:]
+    q1s = q1s[:-split]
+    val_q2s = q2s[-split:]
+    q2s = q2s[:-split]
+    val_y = y[-split:]
+    y = y[:-split]
+    qid1s = qid1s[:-split]
+    qid2s = qid2s[:-split]
+
+    train_data = list(zip(qid1s, qid2s, q1s, q1s, y))
+
+    for augment in [augmentations[n] for n in augment_names]:
+        train_data = augment(train_data)
+
+    q1s = [q1 for (qid1, qid2, q1, q2, d) in train_data]
+    q2s = [q2 for (qid1, qid2, q1, q2, d) in train_data]
+    y = [d for (qid1, qid2, q1, q2, d) in train_data]
+
     print('Generating input matrices...')
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(all_qs)
 
     sequences_1 = tokenizer.texts_to_sequences(q1s)
     sequences_2 = tokenizer.texts_to_sequences(q2s)
+    val_sequences_1 = tokenizer.texts_to_sequences(val_q1s)
+    val_sequences_2 = tokenizer.texts_to_sequences(val_q2s)
     test_sequences_1 = tokenizer.texts_to_sequences(test_q1s)
     test_sequences_2 = tokenizer.texts_to_sequences(test_q2s)
 
     x1 = pad_sequences(sequences_1, maxlen=maxlen)
     x2 = pad_sequences(sequences_2, maxlen=maxlen)
+    val_x1 = pad_sequences(val_sequences_1, maxlen=maxlen)
+    val_x2 = pad_sequences(val_sequences_2, maxlen=maxlen)
     test_x1 = pad_sequences(test_sequences_1, maxlen=maxlen)
     test_x2 = pad_sequences(test_sequences_2, maxlen=maxlen)
 
-    y = np.array([d for (_, _, q1, q2, d) in train_clean])
-
-    split = int(0.1 * len(train_clean))
-    val_x1 = x1[-split:]
-    x1 = x1[:-split]
-    val_x2 = x2[-split:]
-    x2 = x2[:-split]
-    val_y = y[-split:]
-    y = y[:-split]
+    y = np.array(y)
+    val_y = np.array(y)
 
     print('Loading embeddings...')
     embeddings = load_embeddings(tokenizer.word_index)
