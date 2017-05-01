@@ -1,8 +1,12 @@
 import csv
 import pickle
+from os import path
 
 
-def load_train(fnm, dest_fnm):
+def load_train(fnm='data/train.csv', dest_fnm='data/train.p'):
+    if path.exists(dest_fnm):
+        with open(dest_fnm, 'rb') as f:
+            return pickle.load(f)
     data = []
     with open(fnm, 'r') as f:
         f.readline()  # ignore header
@@ -13,7 +17,10 @@ def load_train(fnm, dest_fnm):
         pickle.dump(data, f)
 
 
-def load_test(fnm, dest_fnm):
+def load_test(fnm='data/test.csv', dest_fnm='data/test.p'):
+    if path.exists(dest_fnm):
+        with open(dest_fnm, 'rb') as f:
+            return pickle.load(f)
     data = []
     with open(fnm, 'r') as f:
         f.readline()  # ignore header
