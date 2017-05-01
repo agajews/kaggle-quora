@@ -13,7 +13,35 @@ from nltk.stem import SnowballStemmer
 
 
 def clean(question):
-    question = re.sub(r"[^A-Za-z0-9^,!.']", " ", question)
+    question = re.sub(r"[^A-Za-z0-9^,!.\/'+-=]", " ", question)
+    question = re.sub(r"what's", "what is ", question)
+    question = re.sub(r"\'s", " ", question)
+    question = re.sub(r"\'ve", " have ", question)
+    question = re.sub(r"can't", "cannot ", question)
+    question = re.sub(r"n't", " not ", question)
+    question = re.sub(r"i'm", "i am ", question)
+    question = re.sub(r"\'re", " are ", question)
+    question = re.sub(r"\'d", " would ", question)
+    question = re.sub(r"\'ll", " will ", question)
+    question = re.sub(r",", " ", question)
+    question = re.sub(r"\.", " ", question)
+    question = re.sub(r"!", " ! ", question)
+    question = re.sub(r"\/", " ", question)
+    question = re.sub(r"\^", " ^ ", question)
+    question = re.sub(r"\+", " + ", question)
+    question = re.sub(r"\-", " - ", question)
+    question = re.sub(r"\=", " = ", question)
+    question = re.sub(r"'", " ", question)
+    question = re.sub(r"(\d+)(k)", r"\g<1>000", question)
+    question = re.sub(r":", " : ", question)
+    question = re.sub(r" e g ", " eg ", question)
+    question = re.sub(r" b g ", " bg ", question)
+    question = re.sub(r" u s ", " american ", question)
+    question = re.sub(r"\0s", "0", question)
+    question = re.sub(r" 9 11 ", "911", question)
+    question = re.sub(r"e - mail", "email", question)
+    question = re.sub(r"j k", "jk", question)
+    question = re.sub(r"\s{2,}", " ", question)
     return question
 
 
