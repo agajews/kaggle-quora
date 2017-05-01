@@ -47,13 +47,15 @@ def load_embeddings(word_index):
     return embeddings
 
 
-def load_clean(maxlen=30):
+def load_clean(hyperparams):
     if path.exists('data/all_clean.p'):
         with open('data/all_clean.p', 'rb') as f:
             return pickle.load(f)
 
-    train = load_train()[:5000]
-    test = load_test()[:5000]
+    maxlen = hyperparams['maxlen']
+
+    train = load_train()
+    test = load_test()
 
     print('Found {} train questions'.format(len(train)))
     print('Found {} test questions'.format(len(test)))
