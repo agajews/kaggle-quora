@@ -40,15 +40,13 @@ def train(model, model_hyperparams, global_hyperparams, fnm='results.json'):
 
     print('Training model...')
     val_loss, misc_data = all_models[model].train(
-        x1, x2, y, val_x1, val_x2,
-        val_y, embeddings, stamp, len(results), **model_hyperparams)
+        x1[:5000], x2[:5000], y[:5000], val_x1[:5000], val_x2[:5000],
+        val_y[:5000], embeddings, stamp, len(results), **model_hyperparams)
     print('Val loss: {}'.format(val_loss))
     results[stamp] = {
         'val_loss': val_loss,
         'model_hyperparams': model_hyperparams,
         'global_hyperparams': global_hyperparams,
-        'augmentors': augmentors,
-        'processors': processors,
         'misc': misc_data,
         'model': model
     }
@@ -70,9 +68,7 @@ def train_random(p=0.5, val_split=0.1, fnm='results.json'):
     model_hyperparams = {}
     for k, opts in all_models[model].hyperparam_opts.items():
         model_hyperparams[k] = random.choice(opts)
-    processors = random_fns(processor_order, p)
-    augmentors = random_fns(augmentor_order, p)
-    return train(model, model_hyperparams, processors, augmentors,
+    return train(model, model_hyperparams,
                  global_hyperparams, val_split, fnm)
 
 
@@ -91,10 +87,4 @@ if __name__ == '__main__':
         'lstm_depth': 1,
         'lstm_size': 256,
         'rec_dropout_p': 0.3
-    }, [
-        'lower',
-        'strip_punct',
-        'fancy_tokenize',
-        'replace_nums',
-        'stem'
-    ], ['transitivify'], {'maxlen': 30})
+    }, {'maxlen': 30})
