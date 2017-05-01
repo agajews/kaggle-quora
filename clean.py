@@ -5,8 +5,8 @@ from os import path
 import numpy as np
 
 from gensim.models import KeyedVectors
-from keras.preprocess.sequence import pad_sequences
-from keras.preprocess.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
 from load_data import load_test, load_train
 from nltk.stem import SnowballStemmer
 
