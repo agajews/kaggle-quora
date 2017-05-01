@@ -56,8 +56,8 @@ def load_clean(hyperparams, augment_names):
 
     maxlen = hyperparams['maxlen']
 
-    train = load_train()[:50000]
-    test = load_test()[:50000]
+    train = load_train()[:5000]
+    test = load_test()[:5000]
 
     print('Found {} train questions'.format(len(train)))
     print('Found {} test questions'.format(len(test)))
