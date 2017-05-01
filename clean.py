@@ -135,6 +135,7 @@ def load_clean(hyperparams, augment_names):
     data = (x1, x2, y, val_x1, val_x2, val_y, test_x1,
             test_x2, tokenizer.word_index, embeddings)
 
+    print('Saving in {}'.format(fnm))
     with open(fnm, 'wb') as f:
         pickle.dump(data, f)
     return data
