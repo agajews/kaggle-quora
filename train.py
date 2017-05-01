@@ -81,7 +81,7 @@ if __name__ == '__main__':
     #     train_random()
     train('lstm', {
         'activation': 'relu',
-        'batch_size': 2048,
+        'batch_size': 1024,
         'batchnorm': True,
         'bidirectional': True,
         'dense_depth': 1,
