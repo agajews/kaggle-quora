@@ -99,3 +99,7 @@ def load_clean(maxlen=30):
     with open('data/all_clean.p', 'wb') as f:
         pickle.dump((x1, x2, y, val_x1, val_x2, val_y, test_x1,
                      test_x2, tokenizer.word_index, embeddings), f)
+
+
+if __name__ == '__main__':
+    clean()
