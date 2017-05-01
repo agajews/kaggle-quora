@@ -83,7 +83,7 @@ if __name__ == '__main__':
         'activation': 'relu',
         'batch_size': 1024,
         'batchnorm': True,
-        'bidirectional': True,
+        'bidirectional': False,
         'dense_depth': 1,
         'dense_size': 128,
         'dropout_p': 0.3,
@@ -92,5 +92,5 @@ if __name__ == '__main__':
         'lstm_size': 256,
         'rec_dropout_p': 0.3
     }, [
-        'transitivify'
+        # 'transitivify'
     ], {'maxlen': 30})
