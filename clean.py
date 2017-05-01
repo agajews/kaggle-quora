@@ -47,7 +47,7 @@ def load_embeddings(word_index):
     return embeddings
 
 
-def load_clean(hyperparams):
+def load_clean(hyperparams=None):
     if path.exists('data/all_clean.p'):
         with open('data/all_clean.p', 'rb') as f:
             return pickle.load(f)
@@ -117,4 +117,4 @@ def load_clean(hyperparams):
 
 
 if __name__ == '__main__':
-    load_clean()
+    load_clean({'maxlen': 30})
