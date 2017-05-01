@@ -15,7 +15,7 @@ global_hyperparam_opts = {
 }
 
 
-def train(model, model_hyperparams, global_hyperparams, augment_names,
+def train(model, model_hyperparams, augment_names, global_hyperparams,
           fnm='results.json'):
     stamp = model + '_'
     stamp += ','.join('{}={}'.format(k, v)
