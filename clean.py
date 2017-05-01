@@ -11,7 +11,7 @@ from load_data import load_test, load_train
 from nltk.stem import SnowballStemmer
 
 word2vec = KeyedVectors.load_word2vec_format(
-    'GoogleNews-vectors-negative300.bin', binary=True)
+    'data/GoogleNews-vectors-negative300.bin', binary=True)
 
 
 def clean(question):
