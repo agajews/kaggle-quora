@@ -1,4 +1,5 @@
 import numpy as np
+
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import LSTM, Dense, Dropout, Embedding, Input
 from keras.layers.merge import concatenate
@@ -12,7 +13,7 @@ hyperparam_opts = {
     'dense_size': np.arange(100, 550, 25).tolist(),
     'dropout_p': np.around(np.arange(0, 0.8, 0.1), 3).tolist(),
     'rec_dropout_p': np.around(np.arange(0, 0.8, 0.1), 3).tolist(),
-    'batch_size': np.arange(100, 1100, 100).tolist(),
+    'batch_size': [256, 512, 1024, 2048],
     'activation': ['relu', 'tanh', 'elu'],
     'bidirectional': [True, False],
     'lstm_depth': [1, 2],

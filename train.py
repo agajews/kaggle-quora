@@ -81,15 +81,16 @@ if __name__ == '__main__':
     #     train_random()
     train('lstm', {
         'activation': 'relu',
-        'batch_size': 1000,
+        'batch_size': 2048,
         'batchnorm': True,
         'bidirectional': True,
         'dense_depth': 1,
         'dense_size': 128,
         'dropout_p': 0.3,
-        'lr': 0.002,
+        'lr': 0.001,
         'lstm_depth': 1,
         'lstm_size': 256,
         'rec_dropout_p': 0.3
     }, [
+        'transitivify'
     ], {'maxlen': 30})
