@@ -44,7 +44,7 @@ def load_embeddings(word_index):
             embeddings[i] = word2vec.word_vec(word)
         else:
             n_missing += 1
-    print('Missing {}% of embeddings'.format(n_missing / n_tokens * 100))
+    print('Missing {:0.2f}% of embeddings'.format(n_missing / n_tokens * 100))
     return embeddings
 
 
