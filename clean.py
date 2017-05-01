@@ -50,6 +50,7 @@ def load_embeddings(word_index):
 
 def load_clean(hyperparams, augment_names):
     fnm = 'all_clean_' + '_'.join(augment_names) + '.p'
+    print(fnm)
     if path.exists(fnm):
         with open(fnm, 'rb') as f:
             return pickle.load(f)
