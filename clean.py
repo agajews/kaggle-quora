@@ -13,6 +13,7 @@ from nltk.stem import SnowballStemmer
 
 def clean(question):
     question = re.sub(r"[^A-Za-z0-9^,!.']", " ", question)
+    return question
 
 
 stemmer = SnowballStemmer('english')
