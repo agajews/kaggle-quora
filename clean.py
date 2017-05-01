@@ -56,8 +56,8 @@ def load_clean(hyperparams, augment_names):
 
     maxlen = hyperparams['maxlen']
 
-    train = load_train()
-    test = load_test()
+    train = load_train()[:50000]
+    test = load_test()[:50000]
 
     print('Found {} train questions'.format(len(train)))
     print('Found {} test questions'.format(len(test)))
@@ -126,7 +126,7 @@ def load_clean(hyperparams, augment_names):
     test_x2 = pad_sequences(test_sequences_2, maxlen=maxlen)
 
     y = np.array(y)
-    val_y = np.array(y)
+    val_y = np.array(val_y)
 
     print('Loading embeddings...')
     embeddings = load_embeddings(tokenizer.word_index)
