@@ -33,7 +33,7 @@ def train(model, model_hyperparams, global_hyperparams, fnm='results.json'):
     pprint(global_hyperparams)
 
     print('Loading data...')
-    x1, x2, y, val_x1, val_x2, val_y, _, _, embeddings, _ = load_clean(
+    x1, x2, y, val_x1, val_x2, val_y, _, _, _, embeddings = load_clean(
         global_hyperparams)
 
     print('Found {} tokens'.format(embeddings.shape[0]))
