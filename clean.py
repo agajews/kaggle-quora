@@ -49,8 +49,9 @@ def load_embeddings(word_index):
 
 
 def load_clean(hyperparams, augment_names):
-    if path.exists('data/all_clean.p'):
-        with open('data/all_clean.p', 'rb') as f:
+    fnm = 'all_clean_' + '_'.join(augment_names) + '.p'
+    if path.exists(fnm):
+        with open(fnm, 'rb') as f:
             return pickle.load(f)
 
     maxlen = hyperparams['maxlen']
@@ -134,7 +135,7 @@ def load_clean(hyperparams, augment_names):
     data = (x1, x2, y, val_x1, val_x2, val_y, test_x1,
             test_x2, tokenizer.word_index, embeddings)
 
-    with open('data/all_clean.p', 'wb') as f:
+    with open(fnm, 'wb') as f:
         pickle.dump(data, f)
     return data
 
