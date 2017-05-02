@@ -54,7 +54,7 @@ def stem(question):
 
 def process_question(q):
     q = clean(q)
-    q = stem(q)
+    # q = stem(q)
     return q
 
 
@@ -77,7 +77,7 @@ def load_embeddings(word_index):
 
 
 def load_clean(hyperparams, augment_names):
-    fnm = 'data/all_clean_2_' + '_'.join(augment_names) + '.p'
+    fnm = 'data/all_clean_nostem_' + '_'.join(augment_names) + '.p'
     if path.exists(fnm):
         with open(fnm, 'rb') as f:
             return pickle.load(f)
