@@ -48,7 +48,7 @@ def train(x1, x2, y, val_x1, val_x2,
 
     embedding = Embedding(n_tokens, embedding_size,
                           input_length=maxlen, weights=[embeddings],
-                          trainable=False, mask_zero=False)
+                          trainable=True, mask_zero=False)
 
     lstm = LSTM(
         lstm_size, dropout=rec_dropout_p,
