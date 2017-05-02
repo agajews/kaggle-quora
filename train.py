@@ -109,11 +109,12 @@ if __name__ == '__main__':
         'bidirectional': False,
         'dense_depth': 2,
         'dense_size': 128,
-        'dropout_p': 0.38,
-        'lr': 0.001,
+        'dropout_p': 0.30,
+        'lr': 0.002,
         'lstm_depth': 1,
         'lstm_size': 256,
-        'rec_dropout_p': 0.38
+        'rec_dropout_p': 0.30
     }, [
-        'transitivify'
+        'transitivify',
+        'noisify'
     ], {'maxlen': 30})
