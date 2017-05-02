@@ -4,9 +4,9 @@ import random
 from pprint import pprint
 
 import numpy as np
-from keras import backend as K
 
 from clean import load_clean
+from keras import backend as K
 from models import all_models
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -91,12 +91,12 @@ if __name__ == '__main__':
         'batchnorm': True,
         'bidirectional': False,
         'dense_depth': 1,
-        'dense_size': 128,
-        'dropout_p': 0.3,
-        'lr': 0.001,
+        'dense_size': 112,
+        'dropout_p': 0.38,
+        'lr': 0.002,
         'lstm_depth': 1,
-        'lstm_size': 256,
-        'rec_dropout_p': 0.3
+        'lstm_size': 262,
+        'rec_dropout_p': 0.28
     }, [
         # 'transitivify'
     ], {'maxlen': 30})
