@@ -39,22 +39,22 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
     x1, x2, y, val_x1, val_x2, val_y, _, _, _, embeddings = load_clean(
         global_hyperparams, augment_names)
 
-    x1 = np.vstack([x1, val_x1])
-    x2 = np.vstack([x2, val_x2])
-    y = np.concatenate([y, val_y])
-
-    perm = np.random.permutation(len(x1))
-    idx_train = perm[:int(len(x1) * 0.9)]
-    idx_val = perm[int(len(x1) * 0.9):]
-
-    val_x1 = x1[idx_val]
-    x1 = x1[idx_train]
-
-    val_x2 = x2[idx_val]
-    x2 = x2[idx_train]
-
-    val_y = y[idx_val]
-    y = y[idx_train]
+    # x1 = np.vstack([x1, val_x1])
+    # x2 = np.vstack([x2, val_x2])
+    # y = np.concatenate([y, val_y])
+    #
+    # perm = np.random.permutation(len(x1))
+    # idx_train = perm[:int(len(x1) * 0.9)]
+    # idx_val = perm[int(len(x1) * 0.9):]
+    #
+    # val_x1 = x1[idx_val]
+    # x1 = x1[idx_train]
+    #
+    # val_x2 = x2[idx_val]
+    # x2 = x2[idx_train]
+    #
+    # val_y = y[idx_val]
+    # y = y[idx_train]
 
     x1_c = np.vstack([x1, x2])
     x2_c = np.vstack([x2, x1])
@@ -104,16 +104,16 @@ if __name__ == '__main__':
     #     train_random()
     train('lstm', {
         'activation': 'relu',
-        'batch_size': 2048,
+        'batch_size': 1024,
         'batchnorm': True,
-        'bidirectional': False,
+        'bidirectional': True,
         'dense_depth': 1,
         'dense_size': 112,
-        'dropout_p': 0.38,
+        'dropout_p': 0.30,
         'lr': 0.002,
         'lstm_depth': 1,
         'lstm_size': 262,
-        'rec_dropout_p': 0.28
+        'rec_dropout_p': 0.30
     }, [
-        # 'transitivify'
+        'transitivify'
     ], {'maxlen': 30})

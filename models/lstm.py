@@ -50,65 +50,44 @@ def train(x1, x2, y, val_x1, val_x2,
                           input_length=maxlen, weights=[embeddings],
                           trainable=False, mask_zero=False)
 
-    lstm = LSTM(
-        lstm_size, dropout=rec_dropout_p,
-        recurrent_dropout=rec_dropout_p)
-
-    q1_in = Input(shape=[maxlen], dtype='int32')
-    q1_vec = embedding(q1_in)
-    q1_vec = lstm(q1_vec)
+    lstms = []
+    for i in range(lstm_depth):
+        return_sequences = i != lstm_depth - 1
+        lstm = LSTM(
+            lstm_size, dropout=rec_dropout_p,
+            recurrent_dropout=rec_dropout_p, return_sequences=return_sequences)
+        if bidirectional:
+            lstm = Bidirectional(lstm)
+        lstms.append(lstm)
 
     q2_in = Input(shape=[maxlen], dtype='int32')
     q2_vec = embedding(q2_in)
-    q2_vec = lstm(q2_vec)
+    for lstm in lstms:
+        q2_vec = lstm(q2_vec)
+
+    q1_in = Input(shape=[maxlen], dtype='int32')
+    q1_vec = embedding(q1_in)
+    for lstm in lstms:
+        q1_vec = lstm(q1_vec)
+
+    q2_in = Input(shape=[maxlen], dtype='int32')
+    q2_vec = embedding(q2_in)
+    for lstm in lstms:
+        q2_vec = lstm(q2_vec)
 
     net = concatenate([q1_vec, q2_vec])
     net = Dropout(dropout_p)(net)
-    net = BatchNormalization()(net)
+    if batchnorm:
+        net = BatchNormalization()(net)
 
-    net = Dense(dense_size, activation=activation)(net)
-    net = Dropout(dropout_p)(net)
-    net = BatchNormalization()(net)
+    for i in range(dense_depth):
+        net = Dense(dense_size, activation=activation)(net)
+        net = Dropout(dropout_p)(net)
+        if batchnorm:
+            net = BatchNormalization()(net)
 
     y_hat = Dense(1, activation='sigmoid')(net)
 
-    # q2_in = Input(shape=[maxlen], dtype='int32')
-    # q2_vec = embedding(q2_in)
-    # for lstm in lstms:
-    #     q2_vec = lstm(q2_vec)
-    # lstms = []
-    # for i in range(lstm_depth):
-    #     return_sequences = i != lstm_depth - 1
-    #     lstm = LSTM(
-    #         lstm_size, dropout=rec_dropout_p,
-    #         recurrent_dropout=rec_dropout_p, return_sequences=return_sequences)
-    #     if bidirectional:
-    #         lstm = Bidirectional(lstm)
-    #     lstms.append(lstm)
-    #
-    # q1_in = Input(shape=[maxlen], dtype='int32')
-    # q1_vec = embedding(q1_in)
-    # for lstm in lstms:
-    #     q1_vec = lstm(q1_vec)
-    #
-    # q2_in = Input(shape=[maxlen], dtype='int32')
-    # q2_vec = embedding(q2_in)
-    # for lstm in lstms:
-    #     q2_vec = lstm(q2_vec)
-    #
-    # net = concatenate([q1_vec, q2_vec])
-    # net = Dropout(dropout_p)(net)
-    # if batchnorm:
-    #     net = BatchNormalization()(net)
-    #
-    # for i in range(dense_depth):
-    #     net = Dense(dense_size, activation=activation)(net)
-    #     net = Dropout(dropout_p)(net)
-    #     if batchnorm:
-    #         net = BatchNormalization()(net)
-    #
-    # y_hat = Dense(1, activation='sigmoid')(net)
-    #
     model = Model(inputs=[q1_in, q2_in], outputs=y_hat)
     optim = Nadam(lr=lr)
     model.compile(loss='binary_crossentropy', optimizer=optim, metrics=['acc'])
