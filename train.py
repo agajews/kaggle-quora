@@ -41,7 +41,7 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
 
     x1 = np.vstack([x1, val_x1])
     x2 = np.vstack([x2, val_x2])
-    y = np.vstack([y, val_y])
+    y = np.concatenate([y, val_y])
 
     perm = np.random.permutation(len(x1))
     idx_train = perm[:int(len(x1) * 0.9)]
