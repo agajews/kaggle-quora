@@ -6,6 +6,7 @@ import sys
 from string import punctuation
 
 import numpy as np
+
 import pandas as pd
 from gensim.models import KeyedVectors
 from keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -59,7 +60,7 @@ print('Processing text dataset')
 # https://www.kaggle.com/currie32/quora-question-pairs/the-importance-of-cleaning-text
 
 
-def text_to_wordlist(text, remove_stopwords=False, stem_words=True):
+def text_to_wordlist(text, remove_stopwords=False, stem_words=False):
     # Clean the text, with the option to remove stopwords and to stem words.
 
     # Convert words to lower case and split them
