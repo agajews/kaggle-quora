@@ -3,8 +3,10 @@ import os
 import random
 from pprint import pprint
 
-from clean import load_clean
+import numpy as np
 from keras import backend as K
+
+from clean import load_clean
 from models import all_models
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -37,6 +39,10 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
     x1, x2, y, val_x1, val_x2, val_y, _, _, _, embeddings = load_clean(
         global_hyperparams, augment_names)
 
+    x1_c = np.vstack([x1, x2])
+    x2_c = np.vstack([x2, x1])
+    y_c = np.concatenate([y, y])
+
     print('Found {} tokens'.format(embeddings.shape[0]))
 
     print('Training model...')
@@ -44,7 +50,7 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
     #     x1[:5000], x2[:5000], y[:5000], val_x1[:5000], val_x2[:5000],
     #     val_y[:5000], embeddings, stamp, len(results), **model_hyperparams)
     val_loss, misc_data = all_models[model].train(
-        x1, x2, y, val_x1, val_x2,
+        x1_c, x2_c, y_c, val_x1, val_x2,
         val_y, embeddings, stamp, len(results), **model_hyperparams)
     print('Val loss: {}'.format(val_loss))
     results[stamp] = {
