@@ -126,7 +126,7 @@ def load_clean(hyperparams, augment_names):
     qid1s = qid1s[:-split]
     qid2s = qid2s[:-split]
 
-    train_data = list(zip(qid1s, qid2s, q1s, q1s, y))
+    train_data = list(zip(qid1s, qid2s, q1s, q2s, y))
 
     for augment in [augmentations[n] for n in augment_names]:
         train_data = augment(train_data)
