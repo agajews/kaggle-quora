@@ -19,7 +19,6 @@ from keras.preprocessing.text import Tokenizer
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 
-reload(sys)
 sys.setdefaultencoding('utf-8')
 
 ########################################
