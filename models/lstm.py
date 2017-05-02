@@ -1,4 +1,5 @@
 import numpy as np
+
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import LSTM, Dense, Dropout, Embedding, Input
 from keras.layers.merge import concatenate
@@ -24,6 +25,10 @@ hyperparam_opts = {
 
 def train(x1, x2, y, val_x1, val_x2,
           val_y, embeddings, stamp, exp_num, **hyperparams):
+
+    val_weights = np.ones(len(val_y))
+    val_weights *= 0.472001959
+    val_weights[val_y == 0] = 1.309028344
 
     n_tokens = embeddings.shape[0]
     embedding_size = embeddings.shape[1]
@@ -113,7 +118,8 @@ def train(x1, x2, y, val_x1, val_x2,
     ckpt = ModelCheckpoint(
         ckpt_path, save_best_only=True, save_weights_only=True)
 
-    hist = model.fit([x1, x2], y, validation_data=([val_x1, val_x2], val_y),
+    hist = model.fit([x1, x2], y,
+                     validation_data=([val_x1, val_x2], val_y, val_weights),
                      epochs=200, batch_size=batch_size, shuffle=True,
                      callbacks=[early_stopping, ckpt],
                      class_weight={0: 1.309028344, 1: 0.472001959})
