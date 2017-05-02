@@ -1,5 +1,4 @@
 import numpy as np
-
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import LSTM, Dense, Dropout, Embedding, Input
 from keras.layers.merge import concatenate
@@ -13,7 +12,7 @@ hyperparam_opts = {
     'dense_size': np.arange(100, 550, 25).tolist(),
     'dropout_p': np.around(np.arange(0, 0.8, 0.1), 3).tolist(),
     'rec_dropout_p': np.around(np.arange(0, 0.8, 0.1), 3).tolist(),
-    'batch_size': [256, 512, 1024, 2048],
+    'batch_size': np.arange(100, 1100, 100).tolist(),
     'activation': ['relu', 'tanh', 'elu'],
     'bidirectional': [True, False],
     'lstm_depth': [1, 2],
@@ -44,41 +43,67 @@ def train(x1, x2, y, val_x1, val_x2,
 
     embedding = Embedding(n_tokens, embedding_size,
                           input_length=maxlen, weights=[embeddings],
-                          trainable=True, mask_zero=False)
+                          trainable=True, mask_zero=True)
 
-    lstms = []
-    for i in range(lstm_depth):
-        return_sequences = i != lstm_depth - 1
-        lstm = LSTM(
-            lstm_size, dropout=rec_dropout_p,
-            recurrent_dropout=rec_dropout_p, return_sequences=return_sequences)
-        if bidirectional:
-            lstm = Bidirectional(lstm)
-        lstms.append(lstm)
+    lstm = LSTM(
+        lstm_size, dropout=rec_dropout_p,
+        recurrent_dropout=rec_dropout_p)
 
     q1_in = Input(shape=[maxlen], dtype='int32')
     q1_vec = embedding(q1_in)
-    for lstm in lstms:
-        q1_vec = lstm(q1_vec)
+    q1_vec = lstm(q1_vec)
 
     q2_in = Input(shape=[maxlen], dtype='int32')
     q2_vec = embedding(q2_in)
-    for lstm in lstms:
-        q2_vec = lstm(q2_vec)
+    q2_vec = lstm(q2_vec)
 
     net = concatenate([q1_vec, q2_vec])
     net = Dropout(dropout_p)(net)
-    if batchnorm:
-        net = BatchNormalization()(net)
+    net = BatchNormalization()(net)
 
-    for i in range(dense_depth):
-        net = Dense(dense_size, activation=activation)(net)
-        net = Dropout(dropout_p)(net)
-        if batchnorm:
-            net = BatchNormalization()(net)
+    net = Dense(dense_size, activation=activation)(net)
+    net = Dropout(dropout_p)(net)
+    net = BatchNormalization()(net)
 
     y_hat = Dense(1, activation='sigmoid')(net)
 
+    # q2_in = Input(shape=[maxlen], dtype='int32')
+    # q2_vec = embedding(q2_in)
+    # for lstm in lstms:
+    #     q2_vec = lstm(q2_vec)
+    # lstms = []
+    # for i in range(lstm_depth):
+    #     return_sequences = i != lstm_depth - 1
+    #     lstm = LSTM(
+    #         lstm_size, dropout=rec_dropout_p,
+    #         recurrent_dropout=rec_dropout_p, return_sequences=return_sequences)
+    #     if bidirectional:
+    #         lstm = Bidirectional(lstm)
+    #     lstms.append(lstm)
+    #
+    # q1_in = Input(shape=[maxlen], dtype='int32')
+    # q1_vec = embedding(q1_in)
+    # for lstm in lstms:
+    #     q1_vec = lstm(q1_vec)
+    #
+    # q2_in = Input(shape=[maxlen], dtype='int32')
+    # q2_vec = embedding(q2_in)
+    # for lstm in lstms:
+    #     q2_vec = lstm(q2_vec)
+    #
+    # net = concatenate([q1_vec, q2_vec])
+    # net = Dropout(dropout_p)(net)
+    # if batchnorm:
+    #     net = BatchNormalization()(net)
+    #
+    # for i in range(dense_depth):
+    #     net = Dense(dense_size, activation=activation)(net)
+    #     net = Dropout(dropout_p)(net)
+    #     if batchnorm:
+    #         net = BatchNormalization()(net)
+    #
+    # y_hat = Dense(1, activation='sigmoid')(net)
+    #
     model = Model(inputs=[q1_in, q2_in], outputs=y_hat)
     optim = Nadam(lr=lr)
     model.compile(loss='binary_crossentropy', optimizer=optim, metrics=['acc'])
@@ -90,7 +115,8 @@ def train(x1, x2, y, val_x1, val_x2,
 
     hist = model.fit([x1, x2], y, validation_data=([val_x1, val_x2], val_y),
                      epochs=200, batch_size=batch_size, shuffle=True,
-                     callbacks=[early_stopping, ckpt])
+                     callbacks=[early_stopping, ckpt],
+                     class_weight={0: 1.309028344, 1: 0.472001959})
 
     best_val = min(hist.history['val_loss'])
     return best_val, {'model_fnm': ckpt_path, 'hist': hist.history}
