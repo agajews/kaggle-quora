@@ -5,6 +5,7 @@ from pprint import pprint
 
 import numpy as np
 
+from augment import augmentations
 from clean import load_clean
 from keras import backend as K
 from models import all_models
@@ -95,26 +96,43 @@ def train_random(p=0.5, val_split=0.1, fnm='results.json'):
     model_hyperparams = {}
     for k, opts in all_models[model].hyperparam_opts.items():
         model_hyperparams[k] = random.choice(opts)
-    return train(model, model_hyperparams,
+    augment_names = random.sample(
+        list(augmentations.keys()), random.randrange(0, len(augmentations)))
+    return train(model, model_hyperparams, augment_names,
                  global_hyperparams, val_split, fnm)
 
 
 if __name__ == '__main__':
-    # while True:
-    #     train_random()
-    train('lstm', {
-        'activation': 'relu',
-        'batch_size': 1024,
-        'batchnorm': True,
-        'bidirectional': False,
-        'dense_depth': 2,
-        'dense_size': 128,
-        'dropout_p': 0.30,
-        'lr': 0.002,
-        'lstm_depth': 1,
-        'lstm_size': 256,
-        'rec_dropout_p': 0.30
-    }, [
-        'transitivify',
-        'noisify'
-    ], {'maxlen': 30})
+    while True:
+        train_random()
+    # train('lstm', {
+    #     'activation': 'relu',
+    #     'batch_size': 1024,
+    #     'batchnorm': True,
+    #     'bidirectional': False,
+    #     'dense_depth': 2,
+    #     'dense_size': 128,
+    #     'dropout_p': 0.30,
+    #     'lr': 0.002,
+    #     'lstm_depth': 1,
+    #     'lstm_size': 256,
+    #     'rec_dropout_p': 0.30
+    # }, [
+    #     'transitivify',
+    #     'noisify'
+    # ], {'maxlen': 30})
+    # train('lstm', {
+    #     'activation': 'relu',
+    #     'batch_size': 1024,
+    #     'batchnorm': True,
+    #     'bidirectional': True,
+    #     'dense_depth': 1,
+    #     'dense_size': 128,
+    #     'dropout_p': 0.30,
+    #     'lr': 0.002,
+    #     'lstm_depth': 1,
+    #     'lstm_size': 256,
+    #     'rec_dropout_p': 0.30
+    # }, [
+    #     'transitivify'
+    # ], {'maxlen': 30})
