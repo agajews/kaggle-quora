@@ -2,14 +2,13 @@ import os
 import pickle
 
 import keras.backend as K
+from clean import process_question
 from keras.layers import LSTM, Dense, Dropout, Embedding, Input
 from keras.layers.merge import concatenate
 from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
-
-from clean import process_question
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -62,19 +61,22 @@ model = Model(inputs=[q1_in, q2_in], outputs=y_hat)
 tokenizer = Tokenizer()
 tokenizer.word_index = words
 
-q1 = "Do vegetarians help the environment?"
-q2 = "Does vegetarianism help climate change?"
-
+# q1 = "Do vegetarians help the environment?"
+q1 = input('Question 1: ')
 q1_clean = process_question(q1)
-q2_clean = process_question(q2)
-
 q1_seqs = tokenizer.texts_to_sequences([q1_clean])
+print('q1 => {} => {}'.format(q1_clean, q1_seqs))
+
+# q2 = "Does vegetarianism help climate change?"
+q2 = input('Question 2: ')
+q2_clean = process_question(q2)
 q2_seqs = tokenizer.texts_to_sequences([q2_clean])
+print('q2 => {} => {}'.format(q2_clean, q2_seqs))
 
-x1 = pad_sequences(q1_seqs, maxlen=30)
-x2 = pad_sequences(q2_seqs, maxlen=30)
+q1_x = pad_sequences(q1_seqs, maxlen=30)
+q2_x = pad_sequences(q2_seqs, maxlen=30)
 
-output = model.predict([x1, x2])
-print(output)
+output = model.predict([q1_x, q2_x])
+print(output[0])
 
 K.clear_session()

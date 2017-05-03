@@ -4,10 +4,10 @@ import random
 from pprint import pprint
 
 import numpy as np
-from keras import backend as K
 
 from augment import augmentations
 from clean import load_clean
+from keras import backend as K
 from models import all_models
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -106,24 +106,24 @@ def train_random(fnm='results.json'):
 
 
 if __name__ == '__main__':
-    while True:
-        train_random()
-    # train('lstm', {
-    #     'activation': 'relu',
-    #     'batch_size': 1024,
-    #     'batchnorm': True,
-    #     'bidirectional': False,
-    #     'dense_depth': 2,
-    #     'dense_size': 128,
-    #     'dropout_p': 0.30,
-    #     'lr': 0.002,
-    #     'lstm_depth': 1,
-    #     'lstm_size': 256,
-    #     'rec_dropout_p': 0.30
-    # }, [
-    #     'noisify',
-    #     'transitivify',
-    # ], {'maxlen': 30})
+    # while True:
+    #     train_random()
+    train('lstm', {
+        'activation': 'relu',
+        'batch_size': 1024,
+        'batchnorm': True,
+        'bidirectional': False,
+        'dense_depth': 2,
+        'dense_size': 128,
+        'dropout_p': 0.30,
+        'lr': 0.002,
+        'lstm_depth': 1,
+        'lstm_size': 256,
+        'rec_dropout_p': 0.30
+    }, [
+        'noisify',
+        'transitivify',
+    ], {'maxlen': 30})
     # train('lstm', {
     #     'activation': 'relu',
     #     'batch_size': 1024,
