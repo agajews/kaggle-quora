@@ -73,6 +73,8 @@ q2_clean = process_question(q2)
 q2_seqs = tokenizer.texts_to_sequences([q2_clean])
 print('q2 => {} => {}'.format(q2_clean, q2_seqs))
 
+input('Compute? ')
+
 q1_x = pad_sequences(q1_seqs, maxlen=30)
 q2_x = pad_sequences(q2_seqs, maxlen=30)
 
