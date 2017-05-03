@@ -4,10 +4,10 @@ import random
 from pprint import pprint
 
 import numpy as np
+from keras import backend as K
 
 from augment import augmentations
 from clean import load_clean
-from keras import backend as K
 from models import all_models
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -24,7 +24,8 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
     stamp += ','.join('{}={}'.format(k, v)
                       for k, v in model_hyperparams.items()) + '_'
     stamp += ','.join('{}={}'.format(k, v)
-                      for k, v in global_hyperparams.items())
+                      for k, v in global_hyperparams.items()) + '_'
+    stamp += ','.join(augment_names)
     with open(fnm, 'r') as f:
         results = json.load(f)
     if stamp in results:
@@ -35,6 +36,7 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
     pprint(model_hyperparams)
     print('Global hyperparams:')
     pprint(global_hyperparams)
+    print('Augmentations: {}'.format(augment_names))
 
     print('Loading data...')
     x1, x2, y, val_x1, val_x2, val_y, _, _, _, embeddings = load_clean(
@@ -88,7 +90,7 @@ def train(model, model_hyperparams, augment_names, global_hyperparams,
     return val_loss
 
 
-def train_random(p=0.5, val_split=0.1, fnm='results.json'):
+def train_random(fnm='results.json'):
     global_hyperparams = {}
     for k, opts in global_hyperparam_opts.items():
         global_hyperparams[k] = random.choice(opts)
@@ -97,9 +99,10 @@ def train_random(p=0.5, val_split=0.1, fnm='results.json'):
     for k, opts in all_models[model].hyperparam_opts.items():
         model_hyperparams[k] = random.choice(opts)
     augment_names = random.sample(
-        list(augmentations.keys()), random.randrange(0, len(augmentations)))
+        sorted(list(augmentations.keys())),
+        random.randrange(0, len(augmentations)))
     return train(model, model_hyperparams, augment_names,
-                 global_hyperparams, val_split, fnm)
+                 global_hyperparams, fnm)
 
 
 if __name__ == '__main__':
@@ -118,8 +121,8 @@ if __name__ == '__main__':
     #     'lstm_size': 256,
     #     'rec_dropout_p': 0.30
     # }, [
+    #     'noisify',
     #     'transitivify',
-    #     'noisify'
     # ], {'maxlen': 30})
     # train('lstm', {
     #     'activation': 'relu',
