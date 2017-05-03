@@ -62,24 +62,25 @@ model.load_weights('params/exp_4.ckpt')
 tokenizer = Tokenizer()
 tokenizer.word_index = words
 
-# q1 = "Do vegetarians help the environment?"
-q1 = input('Question 1: ')
-q1_clean = process_question(q1)
-q1_seqs = tokenizer.texts_to_sequences([q1_clean])
-print('q1 => {} => {}'.format(q1_clean, q1_seqs))
+while True:
+    # q1 = "Do vegetarians help the environment?"
+    q1 = input('Question 1: ')
+    q1_clean = process_question(q1)
+    q1_seqs = tokenizer.texts_to_sequences([q1_clean])
+    print('q1 => {} => {}'.format(q1_clean, q1_seqs))
 
-# q2 = "Does vegetarianism help climate change?"
-q2 = input('Question 2: ')
-q2_clean = process_question(q2)
-q2_seqs = tokenizer.texts_to_sequences([q2_clean])
-print('q2 => {} => {}'.format(q2_clean, q2_seqs))
+    # q2 = "Does vegetarianism help climate change?"
+    q2 = input('Question 2: ')
+    q2_clean = process_question(q2)
+    q2_seqs = tokenizer.texts_to_sequences([q2_clean])
+    print('q2 => {} => {}'.format(q2_clean, q2_seqs))
 
-input('Compute? ')
+    input('Compute? ')
 
-q1_x = pad_sequences(q1_seqs, maxlen=30)
-q2_x = pad_sequences(q2_seqs, maxlen=30)
+    q1_x = pad_sequences(q1_seqs, maxlen=30)
+    q2_x = pad_sequences(q2_seqs, maxlen=30)
 
-output = model.predict([q1_x, q2_x])
-print(output[0])
+    output = model.predict([q1_x, q2_x])
+    print(output[0])
 
 K.clear_session()
