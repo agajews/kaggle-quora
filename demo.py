@@ -12,7 +12,7 @@ from keras.preprocessing.text import Tokenizer
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-with open('data/all_clean_4_transitivify.p', 'rb') as f:
+with open('data/all_clean_4_noisify_transitivify.p', 'rb') as f:
     x1, x2, y, val_x1, val_x2, val_y, _, _, words, embeddings = pickle.load(f)
 
 n_tokens = embeddings.shape[0]
@@ -57,6 +57,7 @@ for i in range(2):
 y_hat = Dense(1, activation='sigmoid')(net)
 
 model = Model(inputs=[q1_in, q2_in], outputs=y_hat)
+model.load_weights('params/exp_4.ckpt')
 
 tokenizer = Tokenizer()
 tokenizer.word_index = words
