@@ -1,4 +1,5 @@
 import numpy as np
+
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import LSTM, Dense, Dropout, Embedding, Input
 from keras.layers.merge import concatenate
@@ -47,7 +48,7 @@ def train(x1, x2, y, val_x1, val_x2,
 
     embedding = Embedding(n_tokens, embedding_size,
                           input_length=maxlen, weights=[embeddings],
-                          trainable=False, mask_zero=False)
+                          trainable=True, mask_zero=False)
 
     lstms = []
     for i in range(lstm_depth):
